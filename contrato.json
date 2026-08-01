@@ -1,0 +1,51 @@
+{
+  "$schema": "https://github.com/Lucas-Belucci-Bellini/baluarte-docs/blob/main/contrato.schema.json",
+  "nome": "baluarte-shell",
+  "titulo": "Shell visual",
+  "versao": "0.0.0",
+  "maturidade": "backlog",
+  "dono": "Lucas-Belucci-Bellini",
+  "responsabilidade": "Layout, sidebar, header, navegação, temas e a camada de efeitos.",
+  "onda": 1,
+  "prioridade": "P0",
+  "rotas": [],
+  "eventos": {
+    "emite": [
+      "sidebar:toggle-collapse",
+      "sidebar:toggle-mobile",
+      "sidebar:close-mobile"
+    ],
+    "consome": [
+      "route:change",
+      "route:error",
+      "toast",
+      "page:pin"
+    ]
+  },
+  "dependencias": [
+    "baluarte-core"
+  ],
+  "dependentes": [
+    "baluarte-academia",
+    "baluarte-arsenal",
+    "baluarte-audio",
+    "baluarte-cibersec",
+    "baluarte-content",
+    "baluarte-economia",
+    "baluarte-elites",
+    "baluarte-midia",
+    "baluarte-robotica",
+    "baluarte-tools"
+  ],
+  "integracao": {
+    "modo": "modulo-esm",
+    "orquestrador": "baluarte-core",
+    "registro": "registrarModulo(contrato, montar)",
+    "status": "proposto"
+  },
+  "inventario": {
+    "origem": "Lucas-Belucci-Bellini/Projeto-Baluarte",
+    "gerado_em": "2026-08-01",
+    "arquivos": 30
+  }
+}
