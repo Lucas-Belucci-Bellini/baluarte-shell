@@ -19,5 +19,15 @@
   },
   "dependencies": {
     "baluarte-core": "github:Lucas-Belucci-Bellini/baluarte-core#claude/baluarte-pre-1-0-0-m6f864"
-  }
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./estilos/*": "./src/estilos/*"
+  },
+  "files": [
+    "src",
+    "baluarte.module.js",
+    "README.md"
+  ]
 }
