@@ -1,5 +1,5 @@
 /**
- * Entrada única do domínio — contrato v1.0.0.
+ * Entrada única do domínio shell — contrato v1.1.0.
  *
  * O orquestrador do Nexus não lê mais nada deste repositório além deste
  * arquivo. Tudo que o domínio publica (rotas, eventos, dependências) passa
@@ -8,40 +8,47 @@
  * Especificação: docs/NEXUS-CONTRATO.md no Projeto-Baluarte.
  */
 
+import { definirDestaques } from './src/destaques.js';
+
 export default {
   nome: 'shell',
-  versao: '0.1.0',
-  contrato: '1.0.0',
+  versao: '0.2.0',
+  contrato: '1.1.0',
   natureza: 'paginas',
 
-  /* Vazio de propósito: nada foi extraído ainda. Declarar rota cujo load
-   * aponta pra arquivo inexistente seria o orquestrador prometendo tela
-   * que quebra ao abrir. Cada entrada chega junto com a página dela. */
-  rotas: [],
-
-  /* O que VAI ser publicado. Existe pra que o mapa do Nexus e este
-   * repositório não contem histórias diferentes enquanto o domínio
-   * está vazio. */
-  planejado: [
-    { path: '/home', titulo: 'Home', peso: 'leve', origem: 'src/pages/' },
-    { path: '/home-3d', titulo: 'Home 3D', peso: 'leve', origem: 'src/pages/' },
-    { path: '/home2', titulo: 'Home (variante)', peso: 'leve', origem: 'src/pages/' },
-    { path: '/sobre', titulo: 'Sobre', peso: 'leve', origem: 'src/pages/' },
-    { path: '/roadmap', titulo: 'Roadmap', peso: 'leve', origem: 'src/pages/' },
-    { path: '/projetos', titulo: 'Projetos', peso: 'leve', origem: 'src/pages/' },
+  /* Primeiro domínio a publicar rota de verdade: as páginas já moram aqui e
+   * carregam. `load` é sempre import() dinâmico — é o que preserva o
+   * code-splitting que o site já tem. */
+  rotas: [
+    { path: '/home', titulo: 'Home', icone: 'home', peso: 'leve', load: () => import('./src/paginas/home.js') },
+    { path: '/home-3d', titulo: 'Home 3D', icone: 'home', peso: 'leve', load: () => import('./src/paginas/home.js') },
+    { path: '/home2', titulo: 'Home (variante)', icone: 'home', peso: 'leve', load: () => import('./src/paginas/home.js') },
+    { path: '/sobre', titulo: 'Sobre', icone: 'info', peso: 'leve', load: () => import('./src/paginas/sobre.js') },
+    { path: '/roadmap', titulo: 'Roadmap', icone: 'map', peso: 'leve', load: () => import('./src/paginas/roadmap.js') },
+    { path: '/projetos', titulo: 'Projetos', icone: 'folder', peso: 'leve', load: () => import('./src/paginas/projetos.js') },
   ],
 
-  /* Declarar é obrigatório: evento não declarado é acoplamento escondido. */
   eventos: {
     emite: [],
     escuta: [],
   },
 
-  precisa: ['baluarte-core'],
+  precisa: ['baluarte-core', 'baluarte-data'],
 
-  /** Sobe quando o módulo entra. `ctx` traz router, bus, appState, storage. */
-  async iniciar(_ctx) {},
+  /**
+   * O orquestrador entrega aqui os `destaques` declarados por TODOS os
+   * domínios (contrato §1.2). A home renderiza a partir deles sem conhecer
+   * ninguém — é o que substituiu o import cruzado de dataset (D-003).
+   *
+   * Sem orquestrador (shell rodando sozinho), a lista chega vazia e a home
+   * aparece sem contador e sem prateleira, em vez de quebrar.
+   */
+  async iniciar(ctx) {
+    definirDestaques(ctx?.destaques ?? []);
+  },
 
   /** Desmonta: solte listener, timer e worker. O que sobra vaza entre rotas. */
-  async parar() {},
+  async parar() {
+    definirDestaques([]);
+  },
 };

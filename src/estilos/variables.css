@@ -1,0 +1,129 @@
+/* Design Tokens — Baluarte Mark XIII · estética "Ouro de Fábula" (Fable 5 V2)
+   Fundo violeta-escuro + acento DOURADO + texto pergaminho + serifas.
+   Os nomes --color-cyan/--color-magenta são MANTIDOS por compatibilidade
+   (~80 folhas + heroSkinColors/efeitos leem eles): cyan = acento (ouro),
+   magenta = acento 2 (ouro-claro). Skins de universo seguem por cima. */
+
+:root {
+  /* === Cores base === */
+  --color-bg: #0e0c16;
+  --color-bg-elevated: #141020;
+  --color-surface: #1d1729;
+  --color-surface-2: #241c33;
+  --color-surface-3: #2c2340;
+  --color-overlay: rgba(10, 8, 16, 0.85);
+
+  /* === Cores de marca (Ouro de Fábula) === */
+  --color-cyan: #d4a24e;
+  --color-cyan-soft: rgba(212, 162, 78, 0.15);
+  --color-cyan-edge: rgba(212, 162, 78, 0.4);
+  --color-magenta: #e8c07a;
+  --color-magenta-soft: rgba(232, 192, 122, 0.15);
+  --color-magenta-edge: rgba(232, 192, 122, 0.4);
+
+  /* === Texto === */
+  --color-text-primary: #f4ecdd;
+  --color-text-secondary: #a89a80;
+  --color-text-muted: #77694f;
+  --color-text-inverse: #241706;
+
+  /* === Estados === */
+  --color-success: #3ddc84;
+  --color-success-soft: rgba(61, 220, 132, 0.12);
+  --color-warning: #ffaa00;
+  --color-warning-soft: rgba(255, 170, 0, 0.12);
+  --color-danger: #ff3355;
+  --color-danger-soft: rgba(255, 51, 85, 0.12);
+  --color-info: #e8c07a;
+
+  /* === Bordas === */
+  --border-thin: 1px solid rgba(212, 178, 112, 0.12);
+  --border-base: 1px solid rgba(212, 178, 112, 0.2);
+  --border-strong: 1px solid rgba(212, 178, 112, 0.4);
+  --border-magenta: 1px solid rgba(232, 192, 122, 0.4);
+
+  /* === Espaçamento (escala 4px) === */
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* === Raios === */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* === Tipografia (Fable V2: serifas + plex mono) === */
+  --font-sans: 'Spectral', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-base: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 22px;
+  --font-size-2xl: 28px;
+  --font-size-3xl: 36px;
+  --font-size-display: 48px;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-base: 1.5;
+  --line-height-loose: 1.75;
+
+  --tracking-tight: -0.01em;
+  --tracking-base: 0;
+  --tracking-wide: 0.05em;
+  --tracking-wider: 0.1em;
+  --tracking-widest: 0.2em;
+
+  /* === Sombras + Glow === */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  --shadow-glow-cyan: 0 0 16px rgba(212, 162, 78, 0.4), 0 0 32px rgba(212, 162, 78, 0.15);
+  --shadow-glow-cyan-strong: 0 0 24px rgba(212, 162, 78, 0.6), 0 0 48px rgba(212, 162, 78, 0.3);
+  --shadow-glow-magenta: 0 0 16px rgba(232, 192, 122, 0.4), 0 0 32px rgba(232, 192, 122, 0.15);
+  --shadow-glow-magenta-strong: 0 0 24px rgba(232, 192, 122, 0.6), 0 0 48px rgba(232, 192, 122, 0.3);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  /* === Transições === */
+  --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 320ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* === Layout === */
+  --header-height: 56px;
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 64px;
+  --content-max-width: 1440px;
+  --z-base: 1;
+  --z-sticky: 100;
+  --z-overlay: 500;
+  --z-modal: 1000;
+  --z-toast: 1500;
+}
+
+/* Reduzir motion respeita acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -18,7 +18,7 @@ import { dirname, join } from 'node:path';
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-const CONTRATO_SUPORTADO = '1.0.0';
+const CONTRATO_SUPORTADO = '1.1.0';
 const PESOS = ['leve', 'pesado'];
 const NATUREZAS = ['paginas', 'biblioteca'];
 
@@ -50,8 +50,14 @@ else if (`baluarte-${m.nome}` !== pkg.name) {
   falhar(`nome: "${m.nome}" não casa com o package.json ("${pkg.name}") — esperado "baluarte-${m.nome}"`);
 }
 if (!/^\d+\.\d+\.\d+$/.test(m.versao ?? '')) falhar(`versao: "${m.versao}" não é semver`);
-if (m.contrato !== CONTRATO_SUPORTADO) {
-  falhar(`contrato: "${m.contrato}" — este verificador conhece ${CONTRATO_SUPORTADO}`);
+/* Major diferente é incompatível; minor a mais é feature que este verificador
+ * ainda não sabe cobrar. 1.0.0 e 1.1.0 convivem — é a regra do contrato §3. */
+const [majSup, minSup] = CONTRATO_SUPORTADO.split('.').map(Number);
+const [majMod, minMod] = String(m.contrato ?? '').split('.').map(Number);
+if (majMod !== majSup) {
+  falhar(`contrato: major "${m.contrato}" incompatível com ${CONTRATO_SUPORTADO}`);
+} else if (minMod > minSup) {
+  falhar(`contrato: "${m.contrato}" é mais novo que ${CONTRATO_SUPORTADO} — atualize o verificador`);
 }
 
 /* Rotas publicadas: precisam estar completas E carregáveis. */
@@ -101,6 +107,36 @@ for (const [tipo, lista] of Object.entries(m.eventos ?? {})) {
 }
 if (!m.eventos) falhar('eventos: ausente — declare { emite: [], escuta: [] } mesmo que vazio');
 
+/* Destaques (v1.1.0): o que este domínio expõe na home. A home renderiza sem
+ * saber de onde veio — é o que substitui o import cruzado de dataset (D-003). */
+const minhasRotas = new Set([
+  ...(m.rotas ?? []).map((r) => r?.path),
+  ...planejado.map((r) => r?.path),
+]);
+if (m.destaques !== undefined) {
+  if (!Array.isArray(m.destaques)) falhar('destaques: precisa ser array');
+  else for (const d of m.destaques) {
+    const id = d?.rotulo ?? '(sem rótulo)';
+    if (!d?.rotulo?.trim()) falhar('destaques: entrada sem rótulo');
+    if (!d?.rota?.startsWith('/')) falhar(`destaques ${id}: rota "${d?.rota}" precisa começar com /`);
+    else if (!minhasRotas.has(d.rota)) {
+      falhar(`destaques ${id}: rota ${d.rota} não é deste domínio — destaque não é porta dos fundos pro acoplamento`);
+    }
+    if (d?.total === undefined && d?.itens === undefined) {
+      falhar(`destaques ${id}: sem total e sem itens não destaca nada`);
+    }
+    if (d?.total !== undefined) {
+      if (!Number.isInteger(d.total) || d.total < 0) falhar(`destaques ${id}: total "${d.total}" não é inteiro >= 0`);
+      /* Regra do projeto: número sem fonte não entra. O contador da home é
+       * número declarado, então ele tem que dizer de onde saiu. */
+      if (!d?.fonte?.trim()) falhar(`destaques ${id}: total sem fonte declarada`);
+    }
+    if (d?.itens !== undefined && typeof d.itens !== 'function') {
+      falhar(`destaques ${id}: itens precisa ser () => import(...) — é o que tira o peso do boot`);
+    }
+  }
+}
+
 /* Dependências. */
 if (!Array.isArray(m.precisa)) falhar('precisa: precisa ser array');
 else for (const dep of m.precisa) {
@@ -120,6 +156,7 @@ console.log(`  rotas planejadas ........... ${planejado.length}`);
 console.log(`  eventos .................... emite ${m.eventos?.emite?.length ?? 0} · escuta ${m.eventos?.escuta?.length ?? 0}`);
 console.log(`  precisa .................... ${m.precisa?.join(', ') || '—'}`);
 console.log(`  externos ................... ${m.externos?.join(', ') || '—'}`);
+console.log(`  destaques na home .......... ${m.destaques?.length ?? 0}`);
 
 if (erros.length) {
   console.error(`\n✗ ${erros.length} divergência(s) com o contrato:`);

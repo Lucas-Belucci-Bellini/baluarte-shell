@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   contrato:
-    name: Manifesto × contrato
+    name: Contrato + testes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,5 +27,14 @@ jobs:
         with:
           node-version: '24.x'
 
-      - name: O manifesto bate com o contrato v1.0.0?
+      - name: Instalar (traz o baluarte-core pela dependência git)
+        run: npm install --no-audit --no-fund
+
+      - name: O manifesto bate com o contrato?
         run: npm run verificar
+
+      # O aceite do contrato exige que o domínio funcione SOZINHO. Os testes
+      # cobrem o registro de destaques (o mecanismo que substituiu o import
+      # cruzado de dataset) e cobram que o shell não volte a importar domínio.
+      - name: O shell roda sozinho?
+        run: npm test
