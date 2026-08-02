@@ -1,0 +1,33 @@
+{
+  "name": "baluarte-shell",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Domínio do Projeto Nexus Baluarte — Casca visual: layout, sidebar, header, overlay, tokens, efeitos e as páginas institucionais que moram no shell",
+  "scripts": {
+    "test": "node --test",
+    "verificar": "node scripts/verificar-contrato.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "dependencies": {
+    "baluarte-core": "github:Lucas-Belucci-Bellini/baluarte-core#claude/baluarte-pre-1-0-0-m6f864"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./estilos/*": "./src/estilos/*"
+  },
+  "files": [
+    "src",
+    "baluarte.module.js",
+    "README.md"
+  ]
+}

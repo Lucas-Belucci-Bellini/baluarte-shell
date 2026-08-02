@@ -1,0 +1,40 @@
+# CI do domínio: o manifesto bate com o contrato do Nexus?
+#
+# Enquanto o domínio está vazio não há build pra rodar, mas há o que cobrar: o
+# baluarte.module.js é o único arquivo que o orquestrador lê deste repositório.
+# Manifesto quebrado só apareceria no boot do sistema todo — aqui aparece no PR.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contrato:
+    name: Contrato + testes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+
+      - name: Instalar (traz o baluarte-core pela dependência git)
+        run: npm install --no-audit --no-fund
+
+      - name: O manifesto bate com o contrato?
+        run: npm run verificar
+
+      # O aceite do contrato exige que o domínio funcione SOZINHO. Os testes
+      # cobrem o registro de destaques (o mecanismo que substituiu o import
+      # cruzado de dataset) e cobram que o shell não volte a importar domínio.
+      - name: O shell roda sozinho?
+        run: npm test
